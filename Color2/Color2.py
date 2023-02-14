@@ -1,11 +1,3 @@
-from email.mime import image
-import imghdr
-from os import name
-from random import gammavariate
-from readline import append_history_file
-from tkinter import Widget, colorchooser
-from turtle import left, width
-from xml.etree.ElementTree import C14NWriterTarget
 import cv2 
 import numpy as np
 
@@ -36,7 +28,7 @@ def figColor(imageHSV):
 	color ='x'
 	if len(cntsRed)>0: color = 'rojo'
 	elif len(cntsYellow)>0:color = 'Amarillo'
-	elif len(cntsBllue)>0:color ='Azul'
+	elif len(cntsBlue)>0:color ='Azul'
 	elif len(cntsgreen)>0:color = 'verde'
 	return color
 
@@ -62,20 +54,20 @@ def figName(contorno,width, higth):
 	
 	return namefig
 
-imge = cv2.read('f.jpg')
+imge = cv2.imread('f.jpg')
 gray = cv2.cvtColor(imge,cv2.COLOR_BGR2GRAY)
 canny = cv2.Canny(gray,10,150)
 canny = cv2.dilate(canny,None,iterations=1)
 canny = cv2.erode(canny, None, iterations =1)
 
-contorno, _ = cv2.findCountours(canny,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+contorno, _ = cv2.findContours(canny,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
 
-imageHSV = cv2.cvtColor(image,cv2.COLOR_BGR2HSV)
+imageHSV = cv2.cvtColor(imge,cv2.COLOR_BGR2HSV)
 
 for c in contorno:
 	x,y,w,h = cv2.boundingRect(c)
 
-	imgAux = np.Zeros(image.shape[:2],dtype='uint8')
+	imgAux = np.zeros(imge.shape[:2],dtype='uint8')
 	imgAux = cv2.drawContours(imgAux,[c],-1,255,-1)
 	maskHSV = cv2.bitwise_and(imageHSV,imageHSV,mask=imgAux)
 	figAll=figName(c,w,h)+' '+ figColor(maskHSV)
